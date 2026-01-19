@@ -33,9 +33,6 @@ export function Navbar() {
             <Link href="/contact" className="hover:text-accent transition-colors">
               {t('contact')}
             </Link>
-            <Link href="/admin" className="hover:text-accent transition-colors">
-              {t('admin')}
-            </Link>
           </div>
 
           {/* Actions */}
