@@ -1,22 +1,35 @@
 import { Router, Request, Response } from 'express';
+import { db } from '../lib/db.js';
 
 const router = Router();
 
 // GET / - List all plastics
-router.get('/', (_req: Request, res: Response) => {
-  res.json([
-    { id: 'pla', name: 'PLA' },
-    { id: 'petg', name: 'PETG' },
-    { id: 'abs', name: 'ABS' },
-    { id: 'asa', name: 'ASA' },
-    { id: 'tpu', name: 'TPU' },
-    { id: 'nylon', name: 'Nylon' },
-  ]);
+router.get('/', async (_req: Request, res: Response) => {
+  try {
+    const plastics = await db('plastics').select('*');
+    res.json(plastics);
+  } catch (error) {
+    console.error('Error fetching plastics:', error);
+    res.status(500).json({ error: 'Database error' });
+  }
 });
 
 // GET /:id - Get plastic details
-router.get('/:id', (_req: Request, res: Response) => {
-  res.status(501).json({ error: 'Not implemented' });
+router.get('/:id', async (req: Request, res: Response) => {
+  try {
+    const plastic = await db('plastics')
+      .where('id', req.params.id)
+      .first();
+    
+    if (!plastic) {
+      return res.status(404).json({ error: 'Plastic not found' });
+    }
+    
+    res.json(plastic);
+  } catch (error) {
+    console.error('Error fetching plastic:', error);
+    res.status(500).json({ error: 'Database error' });
+  }
 });
 
 export default router;
