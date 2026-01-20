@@ -3,7 +3,6 @@ import { db } from '../lib/db.js';
 
 const router = Router();
 
-// GET / - List all plastics
 router.get('/', async (_req: Request, res: Response) => {
   try {
     const plastics = await db('plastics').select('*');
@@ -14,7 +13,6 @@ router.get('/', async (_req: Request, res: Response) => {
   }
 });
 
-// GET /:id - Get plastic details
 router.get('/:id', async (req: Request, res: Response) => {
   try {
     const plastic = await db('plastics')

@@ -1,25 +1,16 @@
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
+import { authMiddleware, adminOnly } from '../middleware/auth.js';
+import { ordersController } from '../controllers/orders.js';
 
 const router = Router();
 
-// POST / - Create order
-router.post('/', (_req: Request, res: Response) => {
-  res.status(501).json({ error: 'Not implemented' });
-});
+// Public: create order
+router.post('/', ordersController.create);
 
-// GET / - List orders (admin)
-router.get('/', (_req: Request, res: Response) => {
-  res.status(501).json({ error: 'Not implemented' });
-});
-
-// GET /:id - Get order details
-router.get('/:id', (_req: Request, res: Response) => {
-  res.status(501).json({ error: 'Not implemented' });
-});
-
-// PATCH /:id - Update order status
-router.patch('/:id', (_req: Request, res: Response) => {
-  res.status(501).json({ error: 'Not implemented' });
-});
+// Protected: admin only
+router.get('/', authMiddleware, adminOnly, ordersController.getAll);
+router.get('/:id', authMiddleware, adminOnly, ordersController.getOne);
+router.patch('/:id', authMiddleware, adminOnly, ordersController.updateStatus);
+router.delete('/:id', authMiddleware, adminOnly, ordersController.delete);
 
 export default router;
