@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
-import { db } from '../lib/db.js';
-import { generateTokens, verifyToken, AuthRequest } from '../middleware/auth.js';
+import { db } from '../lib/db';
+import { generateTokens, verifyToken, AuthRequest } from '../middleware/auth';
 
 export const authController = {
   async register(req: Request, res: Response) {

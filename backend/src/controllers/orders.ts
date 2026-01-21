@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { db } from '../lib/db.js';
-import { AuthRequest } from '../middleware/auth.js';
+import { db } from '../lib/db';
+import { AuthRequest } from '../middleware/auth';
 
 export const ordersController = {
   async create(req: AuthRequest, res: Response) {
