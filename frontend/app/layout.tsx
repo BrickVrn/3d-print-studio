@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
+import { Providers } from '@/components/Providers';
 
 export const metadata: Metadata = {
   title: '3D Print Studio',
@@ -16,9 +17,11 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body className="antialiased flex flex-col min-h-screen">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <Providers>
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

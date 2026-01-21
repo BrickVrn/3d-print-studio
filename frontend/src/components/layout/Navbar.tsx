@@ -3,12 +3,14 @@
 import Link from 'next/link';
 import { useTheme } from '@/hooks/useTheme';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useAuth } from '@/contexts/AuthContext';
 import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 
 export function Navbar() {
   const { theme, toggle: toggleTheme } = useTheme();
   const { lang, toggle: toggleLang, t } = useLanguage();
+  const { user, logout } = useAuth();
 
   return (
     <nav className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
@@ -33,13 +35,29 @@ export function Navbar() {
             <Link href="/contact" className="hover:text-accent transition-colors">
               {t('contact')}
             </Link>
+            {user?.role === 'admin' && (
+              <Link href="/admin" className="hover:text-accent transition-colors">
+                Admin
+              </Link>
+            )}
           </div>
 
           {/* Actions */}
           <div className="flex items-center gap-3">
-            <Button variant="primary" size="sm">
-              {t('orderNow')}
-            </Button>
+            {user ? (
+              <>
+                <span className="text-sm hidden sm:inline">{user.name}</span>
+                <Button variant="ghost" size="sm" onClick={() => logout()}>
+                  Выйти
+                </Button>
+              </>
+            ) : (
+              <Link href="/contact">
+                <Button variant="primary" size="sm">
+                  {t('orderNow')}
+                </Button>
+              </Link>
+            )}
 
             {/* Language Toggle */}
             <button

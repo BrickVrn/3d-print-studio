@@ -7,6 +7,7 @@ import { contactSchema, ContactFormData } from '@/lib/schemas';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { useLanguage } from '@/hooks/useLanguage';
+import { ordersApi } from '@/lib/api';
 
 interface ContactFormProps {
   onSuccess?: () => void;
@@ -38,7 +39,6 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
         return;
       }
       setFiles(fileArray);
-      setValue('files', fileArray);
       setSubmitError(null);
     }
   };
@@ -46,7 +46,6 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
   const removeFile = (index: number) => {
     const newFiles = files.filter((_, i) => i !== index);
     setFiles(newFiles);
-    setValue('files', newFiles);
   };
 
   const onSubmit = async (data: ContactFormData) => {
@@ -54,26 +53,23 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
     setSubmitError(null);
 
     try {
-      const formData = new FormData();
-      formData.append('name', data.name);
-      formData.append('email', data.email);
-      formData.append('phone', data.phone);
-      formData.append('description', data.description);
-      files.forEach((file) => formData.append('files', file));
+      // Отправляем данные на API
+      await ordersApi.create({
+        client_name: data.name,
+        client_email: data.email,
+        client_phone: data.phone,
+        description: data.description,
+      });
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      console.log('Form submitted:', Object.fromEntries(formData));
       reset();
       setFiles([]);
       if (fileInputRef.current) fileInputRef.current.value = '';
       onSuccess?.();
-    } catch (error) {
+    } catch (error: unknown) {
+      const axiosError = error as { response?: { data?: { error?: string } } };
       setSubmitError(
-        lang === 'ru'
-          ? 'Ошибка отправки. Попробуйте ещё раз.'
-          : 'Submission error. Try again.'
+        axiosError.response?.data?.error ||
+        (lang === 'ru' ? 'Ошибка отправки. Попробуйте ещё раз.' : 'Submission error. Try again.')
       );
     } finally {
       setIsSubmitting(false);
