@@ -16,6 +16,19 @@ services:
       timeout: 5s
       retries: 5
 
+  redis:
+    image: redis:7-alpine
+    container_name: 3d-print-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
   backend:
     build:
       context: ./backend
@@ -32,12 +45,29 @@ services:
       DB_PASSWORD: postgres
       DB_NAME: 3d_print_studio
       DATABASE_URL: postgresql://postgres:postgres@host.docker.internal:5432/3d_print_studio
+      REDIS_HOST: host.docker.internal
+      REDIS_PORT: 6379
       JWT_SECRET: ${JWT_SECRET:-your-super-secret-jwt-key}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-your-refresh-secret}
       FRONTEND_URL: http://localhost:3000
     depends_on:
       postgres:
         condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: 3d-print-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:5000/api
+    depends_on:
+      - backend
 
 volumes:
   postgres_data:
+  redis_data:
