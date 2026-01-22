@@ -1,9 +1,22 @@
 import Redis from 'ioredis';
 
+const getRedisHost = () => {
+  if (process.env.REDIS_HOST) {
+    return process.env.REDIS_HOST;
+  }
+  
+  return process.env.NODE_ENV === 'production' ? 'host.docker.internal' : 'localhost';
+};
+
 const redisClient = new Redis({
-  host: process.env.REDIS_HOST || 'localhost',
+  host: getRedisHost(),
   port: parseInt(process.env.REDIS_PORT || '6379'),
-  maxRetriesPerRequest: 3,
+  maxRetriesPerRequest: 10,
+  retryStrategy(times) {
+    const delay = Math.min(times * 100, 3000);
+    return delay;
+  },
+  lazyConnect: true,
 });
 
 export const cache = {

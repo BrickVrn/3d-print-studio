@@ -4,9 +4,9 @@ This file contains essential information for AI coding agents working in this re
 
 ## Project Overview
 
-**3D Print Studio** — Full-stack application with Next.js 14 frontend and Express backend.
-- Frontend: Next.js App Router, TypeScript, Tailwind CSS, Three.js
-- Backend: Express, TypeScript, PostgreSQL with Knex.js, JWT auth
+**3D Print Studio** — Full-stack application with Next.js 16 frontend and Express backend.
+- Frontend: Next.js App Router, React 19, TypeScript, Tailwind CSS, Three.js
+- Backend: Express 5, TypeScript, PostgreSQL with Knex.js, JWT auth, Redis caching
 
 ---
 
@@ -15,7 +15,7 @@ This file contains essential information for AI coding agents working in this re
 ### Frontend (./frontend)
 ```bash
 cd frontend
-npm run dev          # Start development server (localhost:3000)
+npm run dev          # Start development server with Turbopack (localhost:3000)
 npm run build        # Build for production
 npm run start        # Start production server
 npm run lint         # Run ESLint
@@ -26,7 +26,8 @@ npm run lint         # Run ESLint
 cd backend
 npm run dev          # Start development server with ts-node-dev (localhost:5000)
 npm run build        # Build TypeScript to dist/
-npm start            # Start production server
+npm run start        # Start production server
+npm run test         # Run Jest tests
 ```
 
 ### Single Test
