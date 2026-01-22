@@ -11,12 +11,13 @@ const getRedisHost = () => {
 const redisClient = new Redis({
   host: getRedisHost(),
   port: parseInt(process.env.REDIS_PORT || '6379'),
-  maxRetriesPerRequest: 10,
+  maxRetriesPerRequest: 0,
   retryStrategy(times) {
     const delay = Math.min(times * 100, 3000);
     return delay;
   },
   lazyConnect: true,
+  enableOfflineQueue: false,
 });
 
 export const cache = {
