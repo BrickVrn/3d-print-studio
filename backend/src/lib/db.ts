@@ -1,9 +1,17 @@
 import { knex, type Knex } from 'knex';
 
+const getDbHost = () => {
+  if (process.env.DB_HOST) {
+    return process.env.DB_HOST;
+  }
+  
+  return process.env.NODE_ENV === 'production' ? 'host.docker.internal' : 'localhost';
+};
+
 const config: Knex.Config = {
   client: 'postgresql',
   connection: {
-    host: process.env.DB_HOST || 'localhost',
+    host: getDbHost(),
     port: parseInt(process.env.DB_PORT || '5432'),
     user: process.env.DB_USER || 'postgres',
     password: process.env.DB_PASSWORD || 'postgres',

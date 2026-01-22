@@ -4,11 +4,13 @@ import { db } from '../lib/db';
 export const plasticsController = {
   async getAll(req: Request, res: Response) {
     try {
+      console.log('Fetching all plastics...');
       const plastics = await db('plastics').select('*');
+      console.log('Plastics found:', plastics.length);
       res.json(plastics);
     } catch (error) {
       console.error('Get plastics error:', error);
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ error: 'Internal server error', details: String(error) });
     }
   },
 
