@@ -61,7 +61,7 @@ export const ordersController = {
   async updateStatus(req: AuthRequest, res: Response) {
     try {
       const { status } = req.body;
-      const validStatuses = ['new', 'in_progress', 'completed', 'cancelled'];
+      const validStatuses = ['pending', 'in_progress', 'completed', 'cancelled'];
 
       if (!validStatuses.includes(status)) {
         return res.status(400).json({ error: 'Invalid status' });
