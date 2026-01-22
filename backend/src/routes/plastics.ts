@@ -1,33 +1,14 @@
-import { Router, Request, Response } from 'express';
-import { db } from '../lib/db';
+import { Router } from 'express';
+import { plasticsController } from '../controllers/plastics';
+import { authMiddleware } from '../middleware/auth';
 
 const router = Router();
 
-router.get('/', async (_req: Request, res: Response) => {
-  try {
-    const plastics = await db('plastics').select('*');
-    res.json(plastics);
-  } catch (error) {
-    console.error('Error fetching plastics:', error);
-    res.status(500).json({ error: 'Database error' });
-  }
-});
+router.get('/', plasticsController.getAll);
+router.get('/:id', plasticsController.getOne);
 
-router.get('/:id', async (req: Request, res: Response) => {
-  try {
-    const plastic = await db('plastics')
-      .where('id', req.params.id)
-      .first();
-    
-    if (!plastic) {
-      return res.status(404).json({ error: 'Plastic not found' });
-    }
-    
-    res.json(plastic);
-  } catch (error) {
-    console.error('Error fetching plastic:', error);
-    res.status(500).json({ error: 'Database error' });
-  }
-});
+router.post('/', authMiddleware, plasticsController.create);
+router.put('/:id', authMiddleware, plasticsController.update);
+router.delete('/:id', authMiddleware, plasticsController.delete);
 
 export default router;
