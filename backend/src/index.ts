@@ -3,7 +3,6 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
-import { cache } from './lib/cache';
 
 import authRoutes from './routes/auth';
 import ordersRoutes from './routes/orders';
